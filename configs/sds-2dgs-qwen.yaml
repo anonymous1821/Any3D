@@ -1,0 +1,86 @@
+System:
+  type: score-distillation
+
+  seed: 42 
+  
+  min_step_percent: 0.02 
+  max_step_percent: 0.95
+  true_cfg_strength: 10.0 
+  time_schedule: 'linear' # Choose from ['random', 'linear']
+  weighting_strategy: 'inverse_linear' # Choose from ['constant', 'linear', 'inverse_linear', 'stochastic']
+  weight: 1.0
+  num_steps: 50 
+  iters: 650 
+  accumulation_steps: 1
+  batch_size: 8
+  # Sampled range of camera 
+  min_azi: -180. 
+  max_azi: 180. 
+  min_ele: -30. 
+  max_ele: 70. 
+  min_fov: 49.1 
+  max_fov: 49.1 
+  min_radi: 1.5 
+  max_radi: 1.5 
+  invert_bg_prob: 0.5 
+  res:  [256, 512, 768] 
+  res_steps: [150, 450, 651] # Use list for annealing training resolution
+  verbose: true # Render and save to diagnose intermediate state
+
+  Guidance: 
+    type: 'rfds'
+
+  Renderer:
+    type: 'Gaussian2d'
+    znear: 0.8
+    zfar: 1.6 
+    radius: 0.5 
+    num_pts: null
+    bg_color: [0.5, 0.5, 0.5]
+    xyz_std: 0.01
+    opac_std: 0.01 
+
+    yaws_num: 12
+    max_clusters_to_keep: 20 
+    min_area_ratio: 0.005
+
+    gaussian_config:
+      aabb: [-0.5, -0.5, -0.5, 1.0, 1.0, 1.0]
+      sh_degree: 0 
+      minimum_kernel_size: 0.0
+      scaling_bias: 0.01
+      opacity_bias: 0.1
+
+      position_lr_init: 0.001 
+      position_lr_final: 0.0002
+      position_lr_delay_mult: 0.02
+      position_lr_max_steps: 200
+      feature_lr: 0.01
+      opacity_lr: 0.05
+      scaling_lr: 0.005
+      rotation_lr: 0.005
+      percent_dense: 0.01 
+      density_start_iter: 100
+      density_end_iter: 200
+      densification_interval: 100 
+      densify_grad_threshold: 0.01
+      opacity_reset_interval: 100000
+
+      lambda_normal: 0.004
+      lambda_dist: 20
+      normal_step: 50
+      dist_step: 0
+
+
+  PromptProcessor:  
+    view_dependent_prompting: true 
+    overhead_thr: 40.0 
+    directions:
+      front: [-45 ,45]
+      left: [45, 135]
+      back: [135, -135]
+      right: [-135, -45]
+
+  RFModel: 
+    type: qwen-image 
+    model_name: Qwen/Qwen-Image-2512

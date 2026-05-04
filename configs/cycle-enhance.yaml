@@ -1,0 +1,82 @@
+System:
+  type: 'cycle-enhance-3d'
+
+  ImageSystem:
+    type: feed-forward-inpaint
+    num_steps: null
+    guidance_scale: null # use default values 
+    scale_by_inversion: true
+    cfg_strength: 1.0
+    Model:
+      model_name: "flux.2-klein-9b"
+      type: flux2
+
+    
+    Inversion:
+      type: fireflow
+      num_steps: 4
+      src_guidance_scale: 1.5 
+      src_cfg_strength: 1.0
+      tar_guidance_scale: 5.5 
+      tar_cfg_strength: 1.0 
+
+  
+  im_res: 1024
+  cos_thresh: 0.5
+  negligible_thresh: 0.02
+  significant_thresh: 0.25
+  bake: true
+  seed: 42
+  enable_mv_prompts: true
+  # prompt_template: "Enhance the quality, details, lighting, and textures of this image to make it more realistic and high-resolution, while strictly preserving the exact viewpoint, camera angle, orientation, and overall composition. Do not rotate, flip, or alter the perspective in any way. Ensure the result closely adheres to this text description: '{prompt}'. Incorporate visual elements, style, colors, and key features as a reference from the second image."
+  prompt_template: "Enhance the details and quality of the object in the Figure 1 while following the depth map in Figure 2, to match '{prompt}'"
+  negative_prompt: "Change of perspective, pose, identity."
+  normal:
+    model_name: prs-eth/marigold-normals-v1-1
+    num_steps: 4
+    ensemble_size: 1
+    processing_res: 768
+    color_map: Spectral
+    resample_method: bicubic
+    noise: zeros
+  
+  projection:
+    vertex_shader_path: "./utils/Projection/shaders/vertex_shader.glsl"
+    bake_vertex_shader_path: "./utils/Projection/shaders/vertex_shader_uv.glsl"
+    normal_fragment_shader_path: './utils/Projection/shaders/normal_fragment_shader.glsl'
+
+  poisson:
+    bin_fp: "./submodules/PoissonRecon/Bin/Linux/PoissonRecon"
+    poisson_depth: 9
+    envelope_depth: 8
+    bini_params:
+      depth_lambda: 8e-3 
+      depth_lambda2: 1e-1
+      k: 1.
+      iters: 3000
+      tol: 1e-5
+      cgiter: 5000
+      cgtol: 1e-3
+      seen_thresh: 0.1
+
+  camera_schedule:
+  - yaw: 180.0
+    pitch: 5.
+  - yaw: 240.0
+    pitch: 5.
+  - yaw: 300.0
+    pitch: 5.
+  - yaw: 0.0
+    pitch: 5.
+  - yaw: 60.0 
+    pitch: 5.
+  - yaw: 120.0
+    pitch: 5.
+  - yaw: 180.0
+    pitch: 65
+  - yaw: 0.
+    pitch: 30.
+  - yaw: 90.0 
+    pitch: -25.0
+  - yaw: 270.0
+    pitch: -25.0

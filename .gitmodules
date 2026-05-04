@@ -1,0 +1,3 @@
+[submodule "submodules/PoissonRecon"]
+	path = submodules/PoissonRecon
+	url = https://github.com/mkazhdan/PoissonRecon
