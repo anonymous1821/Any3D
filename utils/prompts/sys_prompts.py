@@ -1,3 +1,17 @@
+FrontViewSelect = """
+    You are an expert in 3D object orientation and pose estimation. You will be given orthogonal views of a 3D object and a text prompt describing the object.
+
+    Task: Select the single image that best shows the 'front' view of the object.
+
+    Assumptions:
+    1. The object is in an upright, canonical orientation.
+    2. "Front" corresponds to the most typical or semantically defined front of such an object.
+
+    Output format:
+    Reply with ONLY one integer indicating which image (in input order, 1-based) is the 'front' view.
+"""
+
+
 MVPrompts4Views = """
     You are creating multi-view image prompts for 3D asset generation. Given:
     1. A text prompt describing a 3D object

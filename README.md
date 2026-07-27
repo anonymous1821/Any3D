@@ -68,7 +68,12 @@ system(
 ## Run
 Currently this mainly support the Score Distillation Sampling (2DGS+RFDS+QwenImage) as described in the paper (use `configs/sds-2dgs-qwen`), and the Cycle-view enhancement (use `configs/cycle-enhance.yaml`)
 
-> Note that these two methods both required a pre-generated model from [TRELLIS](https://github.com/microsoft/TRELLIS), you can refer to the official TRELLIS implementation to generate an inital 3D model (This may require more dependencies to build, please follow the instruction of TRELLIS). Also, since we use view-dependent prompt, which benefits from our canonical normalization, you should transform your sample to canonical orientation manually or with help of Vision-Language-Model, and also provide a front rendering after normalization, to get multi-view prompts.  
+> Note that these two methods both required a pre-generated model from [TRELLIS](https://github.com/microsoft/TRELLIS), you can refer to the official TRELLIS implementation to generate an inital 3D model (This may require more dependencies to build, please follow the instruction of TRELLIS). Also, since we use view-dependent prompt, which benefits from our canonical normalization, run `example_canonicalize.sh` first to orient the asset and write `front.png`, then `example_mv_prompts.py` for multi-view prompts.
+
+### Canonical View Normalization
+```bash
+example_canonicalize.sh
+```
 
 ### Score Distillation Sampling 
 Input: A dictionary of Multi-view Prompts, a `ply` 3dgs checkpoint from TRELLIS, and the output root.
